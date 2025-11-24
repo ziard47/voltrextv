@@ -1,5 +1,5 @@
 // Global State
-let allChannels = [];
+let searchChannels = [];
 let hls;
 
 // DOM Elements (Shared)
@@ -68,11 +68,11 @@ function initSharedUI() {
 }
 
 async function fetchChannelsForSearch() {
-    if (allChannels.length > 0) return;
+    if (searchChannels.length > 0) return;
     try {
         const response = await fetch('https://iptv-org.github.io/iptv/index.m3u');
         const text = await response.text();
-        allChannels = parseM3U(text);
+        searchChannels = parseM3U(text);
     } catch (e) {
         console.error("Failed to fetch for search", e);
     }
@@ -88,21 +88,24 @@ async function init() {
         loadChannel(playUrl, playName || 'Unknown');
     }
 
-    // Fetch and Render
+    // Fetch and Render Featured Channels
     try {
         const response = await fetch('https://iptv-org.github.io/iptv/countries/lk.m3u');
         const text = await response.text();
-        allChannels = parseM3U(text);
+        const featuredChannels = parseM3U(text);
 
-        if (channelCountEl) channelCountEl.textContent = allChannels.length;
+        if (channelCountEl) channelCountEl.textContent = featuredChannels.length;
 
         // Render all Sri Lankan channels on home
-        renderChannels(allChannels);
+        renderChannels(featuredChannels);
 
     } catch (error) {
         console.error('Error:', error);
         if (channelGridEl) channelGridEl.innerHTML = '<div class="loading-text" style="color:red">SYSTEM ERROR</div>';
     }
+
+    // Fetch Global Channels for Search
+    fetchChannelsForSearch();
 }
 
 function parseM3U(content) {
@@ -161,9 +164,9 @@ function performSearch(query) {
         return;
     }
     // If channels not loaded yet (e.g. on other pages), wait or ignore
-    if (allChannels.length === 0) return;
+    if (searchChannels.length === 0) return;
 
-    const results = allChannels.filter(ch => ch.name.toLowerCase().includes(query.toLowerCase())).slice(0, 50);
+    const results = searchChannels.filter(ch => ch.name.toLowerCase().includes(query.toLowerCase())).slice(0, 50);
     searchResults.innerHTML = '';
     results.forEach(ch => {
         const item = document.createElement('div');
