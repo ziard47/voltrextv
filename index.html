@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voltrex TV</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+    <!-- Search Overlay -->
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-content">
+            <button id="closeSearch" class="close-btn"><i class="fas fa-times"></i></button>
+            <input type="text" id="searchInput" placeholder="SEARCH CHANNELS..." autocomplete="off">
+            <div id="searchResults" class="search-results"></div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h1>VOLTREX<span class="neon-accent">TV</span></h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-item active"><i class="fas fa-home"></i> HOME</a>
+            <a href="all-channels.html" class="nav-item"><i class="fas fa-list"></i> ALL CHANNELS</a>
+            <a href="about.html" class="nav-item"><i class="fas fa-info-circle"></i> ABOUT US</a>
+        </div>
+        <div class="nav-actions">
+            <button id="searchBtn" class="icon-btn"><i class="fas fa-search"></i></button>
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Video Player Section -->
+            <section class="player-section">
+                <div class="video-container" id="videoContainer">
+                    <video id="videoPlayer" controls></video>
+                    <div class="placeholder-overlay" id="playerPlaceholder">
+                        <div class="pulse-ring"></div>
+                        <h2>SELECT A CHANNEL</h2>
+                        <p>SYSTEM READY</p>
+                    </div>
+                </div>
+                <div class="channel-info" id="channelInfo">
+                    <h2 id="currentChannelName">NO SIGNAL</h2>
+                    <span id="currentChannelCountry" class="badge">N/A</span>
+                </div>
+            </section>
+
+            <!-- Channel Grid (Dynamic) -->
+            <section class="channels-section">
+                <div class="section-header">
+                    <h3 id="categoryTitle">LOCAL CHANNELS</h3>
+                    <span id="channelCount" class="count-badge">0</span>
+                </div>
+                <div id="channelGrid" class="channel-grid">
+                    <!-- Channels will be injected here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Developed by Mohomed Ziard | <a href="https://voltrex.digital" target="_blank">Voltrex Digital</a></p>
+    </footer>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

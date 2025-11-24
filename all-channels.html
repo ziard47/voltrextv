@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Channels - Voltrex TV</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Search Overlay -->
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-content">
+            <button id="closeSearch" class="close-btn"><i class="fas fa-times"></i></button>
+            <input type="text" id="searchInput" placeholder="SEARCH CHANNELS..." autocomplete="off">
+            <div id="searchResults" class="search-results"></div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h1>VOLTREX<span class="neon-accent">TV</span></h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-item"><i class="fas fa-home"></i> HOME</a>
+            <a href="all-channels.html" class="nav-item active"><i class="fas fa-list"></i> ALL CHANNELS</a>
+            <a href="about.html" class="nav-item"><i class="fas fa-info-circle"></i> ABOUT US</a>
+        </div>
+        <div class="nav-actions">
+            <button id="searchBtn" class="icon-btn"><i class="fas fa-search"></i></button>
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <main class="main-content">
+            <section class="channels-section">
+                <div class="section-header">
+                    <h3>ALL CHANNELS (A-Z)</h3>
+                    <span id="channelCount" class="count-badge">LOADING...</span>
+                </div>
+                <div id="channelGrid" class="channel-grid">
+                    <div class="loading-text">FETCHING CHANNELS...</div>
+                </div>
+                <!-- Pagination Controls -->
+                <div id="paginationControls" class="pagination-container" style="display: none;">
+                    <button id="prevBtn" class="page-btn"><i class="fas fa-chevron-left"></i> PREV</button>
+                    <span id="pageInfo" class="page-info">Page 1 of 1</span>
+                    <button id="nextBtn" class="page-btn">NEXT <i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>Developed by Mohomed Ziard | <a href="https://voltrex.digital" target="_blank">Voltrex Digital</a></p>
+    </footer>
+
+    <!-- Link Shared App JS for Nav/Search -->
+    <script src="assets/js/app.js"></script>
+
+    <!-- Page Specific Script -->
+    <script>
+        const grid = document.getElementById('channelGrid');
+        const countEl = document.getElementById('channelCount');
+        const paginationControls = document.getElementById('paginationControls');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageInfo = document.getElementById('pageInfo');
+        
+        let allPageChannels = [];
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 200;
+        let totalPages = 1;
+
+        async function initPage() {
+            try {
+                const response = await fetch('https://iptv-org.github.io/iptv/index.m3u');
+                const text = await response.text();
+                allPageChannels = parseM3UPage(text);
+                
+                countEl.textContent = allPageChannels.length;
+                totalPages = Math.ceil(allPageChannels.length / ITEMS_PER_PAGE);
+                
+                renderPage(1);
+                
+                paginationControls.style.display = 'flex';
+                
+                prevBtn.onclick = () => changePage(-1);
+                nextBtn.onclick = () => changePage(1);
+                
+            } catch (e) {
+                console.error(e);
+                grid.innerHTML = '<div class="loading-text" style="color:red">ERROR LOADING CHANNELS</div>';
+            }
+        }
+
+        function parseM3UPage(content) {
+            const lines = content.split('\n');
+            let channels = [];
+            let current = {};
+            
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startsWith('#EXTINF:')) {
+                    const info = line.substring(8);
+                    const parts = info.split(',');
+                    current.name = parts[parts.length - 1].trim();
+                } else if (line.startsWith('http')) {
+                    current.url = line;
+                    if (current.name && current.url && current.name.toLowerCase() !== 'null') {
+                        channels.push(current);
+                    }
+                    current = {};
+                }
+            });
+            
+            return channels.sort((a, b) => a.name.localeCompare(b.name));
+        }
+
+        function renderPage(page) {
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const batch = allPageChannels.slice(start, end);
+            
+            grid.innerHTML = '';
+            
+            batch.forEach(ch => {
+                const card = document.createElement('div');
+                card.className = 'channel-card';
+                card.innerHTML = `<div class="channel-name large">${ch.name}</div>`;
+                card.onclick = () => {
+                    window.location.href = `index.html?play=${encodeURIComponent(ch.url)}&name=${encodeURIComponent(ch.name)}`;
+                };
+                grid.appendChild(card);
+            });
+
+            // Update Controls
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+            
+            // Scroll to top of grid
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changePage(delta) {
+            renderPage(currentPage + delta);
+        }
+
+        initPage();
+    </script>
+</body>
+</html>

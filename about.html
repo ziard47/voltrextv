@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Voltrex TV</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Search Overlay -->
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-content">
+            <button id="closeSearch" class="close-btn"><i class="fas fa-times"></i></button>
+            <input type="text" id="searchInput" placeholder="SEARCH CHANNELS..." autocomplete="off">
+            <div id="searchResults" class="search-results"></div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h1>VOLTREX<span class="neon-accent">TV</span></h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-item"><i class="fas fa-home"></i> HOME</a>
+            <a href="all-channels.html" class="nav-item"><i class="fas fa-list"></i> ALL CHANNELS</a>
+            <a href="about.html" class="nav-item active"><i class="fas fa-info-circle"></i> ABOUT US</a>
+        </div>
+        <div class="nav-actions">
+            <button id="searchBtn" class="icon-btn"><i class="fas fa-search"></i></button>
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <main class="main-content" style="align-items: center; justify-content: center; text-align: center; padding: 50px;">
+            <h1 style="font-family: 'Orbitron'; font-size: 48px; margin-bottom: 20px;">VOLTREX<span class="neon-accent">TV</span></h1>
+            <p style="max-width: 600px; font-size: 18px; line-height: 1.6; color: var(--text-dim);">
+                Voltrex TV is a futuristic, web-based IPTV player designed for the modern age. 
+                Experience thousands of free-to-air channels from around the globe in a sleek, neon-infused interface.
+            </p>
+            <br>
+            <p style="color: var(--primary-neon);">Version 1.0.0</p>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>Developed by Mohomed Ziard | <a href="https://voltrex.digital" target="_blank">Voltrex Digital</a></p>
+    </footer>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
